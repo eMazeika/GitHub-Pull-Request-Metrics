@@ -1,0 +1,30 @@
+.grid {
+    /*width: 500px;
+    height: 400px;*/
+}
+
+
+.wrap-text .ui-grid-cell-contents {
+    white-space: normal;
+}
+
+[ui-grid-row] {
+    display: table-row;
+}
+
+.ui-grid-row, .ui-grid-cell {
+    height: auto !important;
+    max-height: 150px;
+    overflow: hidden;
+}
+
+.ui-grid-cell {
+    float: none;
+    display: table-cell;
+}
+
+.ui-grid-header-cell, .ui-grid-cell-contents {
+    white-space: normal;
+    padding: 2px;
+    word-break: break-word;
+}

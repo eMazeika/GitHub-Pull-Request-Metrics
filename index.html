@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="node_modules/ui-bootstrap4/dist/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="node_modules/angular-ui-grid/ui-grid.min.css">
+    <link rel="stylesheet" href="main.css">
+
+    <title>Pull Requests metrics</title>
+</head>
+
+<body ng-app="myApp">
+    <div class="container">
+        <h1>GitHub Pull Request Metrics Report</h1>
+        <label>Generate your team's pull requests metrics in one click:</label>
+        <ol>
+            <li>Enter your GitHub 'Personal access token', organization and repositories. Tip: this data can be auto-filled by clicking 'Load sample filter', if you enter such info under 'sharedData' in resources.js file.</li>
+            <li>Set PRs closing date range</li>
+            <li>Click 'Generate PR metrics'</li>
+        </ol>
+        <div ng-controller="metricsController as ctrl">
+            <form novalidate name="myForm">
+                <h4>Filter</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="token">GitHub Personal access token</label>
+                            <input ng-model="ctrl.token" required type="password" class="form-control" ng-class="{'is-invalid': myForm.token.$invalid}" placeholder="abcdef123456789" id="token" name="token">
+                            <span>Missing a token? Generate one <a target="_blank" href="https://github.com/settings/tokens">here!</a></span>
+                        </div>
+                        <div class="form-group is-invalid">
+                            <label for="org">GitHub organization</label>
+                            <input ng-model="ctrl.filter.organization" required type="text" class="form-control" ng-class="{'is-invalid': myForm.org.$invalid}" placeholder="my-organization" id="org" name="org">
+                        </div>
+                        <div class="form-group">
+                            <label for="from">Closed from</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" ng-class="{'is-invalid': myForm.from.$invalid}" uib-datepicker-popup ng-model="ctrl.filter.startDate" is-open="ctrl.datepickers.start" required close-text="Close" alt-input-formats="ctrl.datepickers.altInputFormats" id="from" name="from" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-secondary" ng-click="ctrl.datepickers.start=true">
+                                        <i class="fa-svg-icon">
+                                            <svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M192 1664h288v-288h-288v288zm352 0h320v-288h-320v288zm-352-352h288v-320h-288v320zm352 0h320v-320h-320v320zm-352-384h288v-288h-288v288zm736 736h320v-288h-320v288zm-384-736h320v-288h-320v288zm768 736h288v-288h-288v288zm-384-352h320v-320h-320v320zm-352-864v-288q0-13-9.5-22.5t-22.5-9.5h-64q-13 0-22.5 9.5t-9.5 22.5v288q0 13 9.5 22.5t22.5 9.5h64q13 0 22.5-9.5t9.5-22.5zm736 864h288v-320h-288v320zm-384-384h320v-288h-320v288zm384 0h288v-288h-288v288zm32-480v-288q0-13-9.5-22.5t-22.5-9.5h-64q-13 0-22.5 9.5t-9.5 22.5v288q0 13 9.5 22.5t22.5 9.5h64q13 0 22.5-9.5t9.5-22.5zm384-64v1280q0 52-38 90t-90 38h-1408q-52 0-90-38t-38-90v-1280q0-52 38-90t90-38h128v-96q0-66 47-113t113-47h64q66 0 113 47t47 113v96h384v-96q0-66 47-113t113-47h64q66 0 113 47t47 113v96h128q52 0 90 38t38 90z" /></svg>
+                                        </i>
+                                    </button>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="from">Closed until</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup ng-model="ctrl.filter.endDate" is-open="ctrl.datepickers.end" close-text="Close" alt-input-formats="ctrl.datepickers.altInputFormats" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-secondary" ng-click="ctrl.datepickers.end=true">
+                                        <i class="fa-svg-icon">
+                                            <svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M192 1664h288v-288h-288v288zm352 0h320v-288h-320v288zm-352-352h288v-320h-288v320zm352 0h320v-320h-320v320zm-352-384h288v-288h-288v288zm736 736h320v-288h-320v288zm-384-736h320v-288h-320v288zm768 736h288v-288h-288v288zm-384-352h320v-320h-320v320zm-352-864v-288q0-13-9.5-22.5t-22.5-9.5h-64q-13 0-22.5 9.5t-9.5 22.5v288q0 13 9.5 22.5t22.5 9.5h64q13 0 22.5-9.5t9.5-22.5zm736 864h288v-320h-288v320zm-384-384h320v-288h-320v288zm384 0h288v-288h-288v288zm32-480v-288q0-13-9.5-22.5t-22.5-9.5h-64q-13 0-22.5 9.5t-9.5 22.5v288q0 13 9.5 22.5t22.5 9.5h64q13 0 22.5-9.5t9.5-22.5zm384-64v1280q0 52-38 90t-90 38h-1408q-52 0-90-38t-38-90v-1280q0-52 38-90t90-38h128v-96q0-66 47-113t113-47h64q66 0 113 47t47 113v96h384v-96q0-66 47-113t113-47h64q66 0 113 47t47 113v96h128q52 0 90 38t38 90z" /></svg>
+                                        </i>
+                                    </button>
+                                </span>
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="repositories">Repositories (JSON array)</label>
+                            <textarea ng-model="ctrl.repositoriesJSON" class="form-control" ng-class="{'is-invalid': myForm.repositories.$invalid}" rows="15" placeholder="{{'[\n\'my-repository1\',\n\'my-repository2\'\n]'}}" required id="repositories" name="repositories"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-2">
+                    <div class="col-md-3">
+                        <button type="button" ng-click="ctrl.loadSampleFilter()" class="btn btn-secondary">Load sample filter</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" ng-click="ctrl.getMetrics()" ng-disabled="myForm.$invalid || ctrl.isLoading" class="btn btn-info">Generate PR metrics</button>
+                    </div>
+                    <div class="col-md-1" ng-show="ctrl.isLoading">
+                        <div class="spinner-border"></div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row m-2">
+                <h4>PRs found: {{ctrl.items.length}}</h4>
+            </div>
+            <div id="gridPRs" ui-grid="gridOptionsPRs" ui-grid-exporter ui-grid-resize-columns class="grid"></div>
+
+            <div class="row m-2">
+                <h4>User statistics</h4>
+            </div>
+            <div id="gridUsers" ui-grid="gridOptionsUsers" ui-grid-exporter class="grid"></div>
+
+            <div class="row m-2">
+                <h4>Comments found: {{ctrl.comments.length}} </h4>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="ctrl.filter.excludeDimitri" ng-change="gridFilter()">Exclude dimitri-ak</label>
+            </div>
+            <div id="gridComments" ui-grid="gridOptionsComments" ui-grid-exporter ui-grid-resize-columns class="grid"></div>
+        </div>
+
+        <!--<div ng-controller="myController as ctrl">
+            <button type="button" ng-click="ctrl.repostest('closed')">repos closed</button>
+            <button type="button" ng-click="ctrl.repostest('open')">repos</button>
+            <button type="button" ng-click="ctrl.limit()">.limit()</button>
+            <p ng-if="ctrl.data">Data: <span ng-bind="ctrl.data | json"></span></p>
+        </div>-->
+    </div>
+
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-resource/angular-resource.min.js"></script>
+    <script src="node_modules/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="node_modules/excel-builder/dist/excel-builder.compiled.min.js"></script>
+
+    <script src="node_modules/underscore/underscore-min.js"></script>
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="node_modules/ui-bootstrap4/dist/ui-bootstrap-tpls.js"></script>
+
+    <script src="node_modules/moment/moment.js"></script>
+    <script src="node_modules/angular-moment/angular-moment.js"></script>
+
+    <script src="app.js"></script>
+    <script src="resources.js"></script>
+</body>
+</html>

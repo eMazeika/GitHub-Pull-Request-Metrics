@@ -6,6 +6,7 @@ angular
             token: '',
             organization: 'heineken-order-transfer',
             repos: [
+                'hot-features',
                 'hot-theme',
                 'hot-module-sms-providers',
                 'hot-module-marketing',
@@ -18,6 +19,8 @@ angular
                 'hot-module-customers',
                 'hot-module-inventory',
                 'hot-module-pricing',
+                'hot-module-loyalty',
+                'hot-module-notifications',
                 'hot-module-helpdesk',
                 'hot-module-cart',
                 'hot-module-integration',
@@ -47,7 +50,7 @@ angular
                 var endDate = filter.endDate ? moment(filter.endDate).format().slice(0, 10) : '*';
 
                 var queryFilter = '+repo:' + filter.organization + '/' + filter.repo + '+closed:' + beginDate + '..' + endDate;
-                return $http.get(bu + 'search/issues?per_page=100&q=is:pr+is:merged' + queryFilter);
+                return $http.get(bu + 'search/issues?per_page=100&page=' + filter.page + '&q=is:pr+is:merged' + queryFilter);
             }
         };
     }])
@@ -56,7 +59,6 @@ angular
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
-            //config.headers = config.headers || {};
             config.headers.Authorization = 'token ' + sharedData.token;
             config.headers.Accept = 'application/vnd.github.v3+json';
 

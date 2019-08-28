@@ -77,8 +77,9 @@
                     <div class="col-md-3">
                         <button type="button" ng-click="ctrl.getMetrics()" ng-disabled="myForm.$invalid || ctrl.isLoading" class="btn btn-info">Generate PR metrics</button>
                     </div>
-                    <div class="col-md-1" ng-show="ctrl.isLoading">
+                    <div class="col-md-6" ng-show="ctrl.isLoading">
                         <div class="spinner-border"></div>
+                        Pending requests: {{ctrl.isLoading}}
                     </div>
                 </div>
             </form>

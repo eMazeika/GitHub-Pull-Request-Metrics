@@ -19,6 +19,7 @@
             <li>Enter your GitHub 'Personal access token', organization and repositories. Tip: this data can be auto-filled by clicking 'Load sample filter', if you enter such info under 'sharedData' in resources.js file.</li>
             <li>Set PRs closing date range</li>
             <li>Click 'Generate PR metrics'</li>
+            <li>Click 'Generate Commit metrics'</li>
         </ol>
         <div ng-controller="metricsController as ctrl">
             <form novalidate name="myForm">
@@ -77,6 +78,9 @@
                     <div class="col-md-3">
                         <button type="button" ng-click="ctrl.getMetrics()" ng-disabled="myForm.$invalid || ctrl.isLoading" class="btn btn-info">Generate PR metrics</button>
                     </div>
+                    <div class="col-md-4">
+                        <button type="button" ng-click="ctrl.getCommitMetrics()" ng-disabled="myForm.$invalid || ctrl.isLoading" class="btn btn-info">Generate Commit metrics</button>
+                    </div>
                     <div class="col-md-6" ng-show="ctrl.isLoading">
                         <div class="spinner-border"></div>
                         Pending requests: {{ctrl.isLoading}}
@@ -101,6 +105,13 @@
                 <label><input type="checkbox" ng-model="ctrl.filter.excludeDimitri" ng-change="gridFilter()">Exclude dimitri-ak</label>
             </div>
             <div id="gridComments" ui-grid="gridOptionsComments" ui-grid-exporter ui-grid-resize-columns class="grid"></div>
+            <div class="row m-2">
+                <h4>Commits comment statistics</h4>
+            </div>
+            <div class="row m-2">
+                <h4>Commits found: {{ctrl.commitComments.length}} </h4>
+            </div>
+            <div id="gridCommitComments" ui-grid="gridOptionsCommitComments" ui-grid-exporter ui-grid-resize-columns class="grid"></div>
         </div>
 
         <!--<div ng-controller="myController as ctrl">

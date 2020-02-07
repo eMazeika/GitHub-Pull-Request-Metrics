@@ -4,28 +4,8 @@ angular
     .factory('sharedData', function () {
         return {
             token: '',
-            organization: 'heineken-order-transfer',
-            repos: [
-                'hot-features',
-                'hot-theme',
-                'hot-module-sms-providers',
-                'hot-module-marketing',
-                'hot-module-order',
-                'hot-module-taxes',
-                'hot-module-core',
-                'hot-module-holidays',
-                'hot-module-catalog',
-                'hot-module-africastalking',
-                'hot-module-customers',
-                'hot-module-inventory',
-                'hot-module-pricing',
-                'hot-module-loyalty',
-                'hot-module-notifications',
-                'hot-module-helpdesk',
-                'hot-module-cart',
-                'hot-module-integration',
-                'hot-storefront-core',
-                'hot-module-store'
+            organization: '',
+            repos: [				
             ]
         };
     })
@@ -35,7 +15,8 @@ angular
             getPr: { url: bu + 'repos/:organization/:repo/pulls/:pull_number' },
             getPrReviews: { url: bu + 'repos/:organization/:repo/pulls/:pull_number/reviews', isArray: true },
             getPrComments: { url: bu + 'repos/:organization/:repo/pulls/:pull_number/comments', isArray: true },
-            getBasicComments: { url: bu + 'repos/:organization/:repo/issues/:pull_number/comments', isArray: true },
+			getBasicComments: { url: bu + 'repos/:organization/:repo/issues/:pull_number/comments', isArray: true },
+			getCommits: { url: bu + 'repos/:organization/:repo/commits', isArray: true },
 
             // methods for API testing
             limit: { url: bu + 'rate_limit' },
@@ -55,7 +36,19 @@ angular
         };
     }])
 
-    .factory('httpErrorInterceptor', ['sharedData', function (sharedData) {
+	.service('searchService', ['$http', 'baseUrl', function ($http, bu) {
+        return {
+            commitSearch: function (filter) {
+                var beginDate = moment(filter.startDate).format().slice(0, 10);
+                var endDate = filter.endDate ? moment(filter.endDate).format().slice(0, 10) : '*';
+
+                var queryFilter = 'repos/' + filter.organization + '/' + filter.repo + '/commits';
+                return $http.get(bu + queryFilter, {params: { since: beginDate }});
+            }
+        };
+    }])
+	
+	.factory('httpErrorInterceptor', ['sharedData', function (sharedData) {
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {

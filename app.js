@@ -9,6 +9,7 @@ angular
             ctrl.comments = [];
             ctrl.userStats = {};
             ctrl.userStatsList = [];
+            ctrl.commitComments = [];
             ctrl.isLoading = 0;
         }
         resetData();
@@ -30,6 +31,18 @@ angular
                 filter.repo = re;
                 filter.page = 1;
                 processMetricsPage(filter);
+            });
+        };
+
+        ctrl.getCommitMetrics = function () {
+            resetData();
+            sharedData.token = ctrl.token;
+
+            var repos = angular.fromJson(ctrl.repositoriesJSON);
+            _.each(repos, function (re) {
+                var filter = angular.copy(ctrl.filter);
+                filter.repo = re;
+                processCommitMetricsPage(filter);
             });
         };
 
@@ -103,6 +116,22 @@ angular
 
                     ctrl.items.push(...data.items);
                 });
+            });
+        }
+
+        function processCommitMetricsPage(filter) {
+            wrapLoading(function () {
+                return searchService.commitSearch(filter).then(function (response) {
+                    var data = response.data;
+                    _.each(data, function(item){
+                        var commitComments = {};
+                        commitComments.user = {};
+                        commitComments.repo = filter.repo;
+                        commitComments.user.login = item.commit.author.name;
+                        commitComments.message = item.commit.message;
+                        ctrl.commitComments.push(commitComments);
+                    });
+                 });
             });
         }
 
@@ -186,6 +215,24 @@ angular
                 $scope.gridApi.grid.registerRowsProcessor($scope.singleFilter, 200);
             }
         };
+
+        $scope.gridOptionsCommitComments = {
+            columnDefs: [
+                { name: 'repo', width: 160, sort: { direction: uiGridConstants.DESC, priority: 0 } },
+                { name: 'user', field: 'user.login', width: 160, aggregationType: uiGridConstants.aggregationTypes.sum },
+                { name: 'message', cellTooltip: true, aggregationType: uiGridConstants.aggregationTypes.sum }
+            ],
+            data: 'ctrl.commitComments',
+            exporterMenuCsv: true,
+            enableGridMenu: true,
+            enableSorting: true,
+            rowHeight: 90,
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+                $scope.gridApi.grid.registerRowsProcessor($scope.singleFilter, 200);
+            }
+        };
+
 
         $scope.gridFilter = function () {
             $scope.gridApi.grid.refresh();

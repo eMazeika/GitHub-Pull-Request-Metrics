@@ -4,28 +4,8 @@ angular
     .factory('sharedData', function () {
         return {
             token: '',
-            organization: 'heineken-order-transfer',
+            organization: '',
             repos: [
-                'hot-features',
-                'hot-theme',
-                'hot-module-sms-providers',
-                'hot-module-marketing',
-                'hot-module-order',
-                'hot-module-taxes',
-                'hot-module-core',
-                'hot-module-holidays',
-                'hot-module-catalog',
-                'hot-module-africastalking',
-                'hot-module-customers',
-                'hot-module-inventory',
-                'hot-module-pricing',
-                'hot-module-loyalty',
-                'hot-module-notifications',
-                'hot-module-helpdesk',
-                'hot-module-cart',
-                'hot-module-integration',
-                'hot-storefront-core',
-                'hot-module-store'
             ]
         };
     })
@@ -51,6 +31,12 @@ angular
 
                 var queryFilter = '+repo:' + filter.organization + '/' + filter.repo + '+closed:' + beginDate + '..' + endDate;
                 return $http.get(bu + 'search/issues?per_page=100&page=' + filter.page + '&q=is:pr+is:merged' + queryFilter);
+            },
+            commitSearch: function (filter) {
+                var beginDate = moment(filter.startDate).format().slice(0, 10);
+
+                var queryFilter = 'repos/' + filter.organization + '/' + filter.repo + '/commits';
+                return $http.get(bu + queryFilter, {params: { since: beginDate }});
             }
         };
     }])

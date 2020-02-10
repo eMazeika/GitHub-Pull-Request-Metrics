@@ -124,12 +124,14 @@ angular
                 return searchService.commitSearch(filter).then(function (response) {
                     var data = response.data;
                     _.each(data, function(item){
-                        var commitComments = {};
-                        commitComments.user = {};
-                        commitComments.repo = filter.repo;
-                        commitComments.user.login = item.commit.author.name;
-                        commitComments.message = item.commit.message;
-                        ctrl.commitComments.push(commitComments);
+                        var commitComment = {
+                            repo: filter.repo,
+                            message: item.commit.message,
+                            user: {
+                                login: item.commit.author.name
+                            }
+                        };
+                        ctrl.commitComments.push(commitComment);
                     });
                  });
             });

@@ -9,7 +9,7 @@
         "angular-ui-grid": "^4.8.1",
         "excel-builder": "^2.0.3",
         "jszip": "^2.6.1",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.19",
         "moment": "^2.24.0",
         "ui-bootstrap4": "^3.0.6",
         "underscore": "^1.9.1"

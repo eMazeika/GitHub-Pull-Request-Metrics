@@ -10,7 +10,7 @@
         "excel-builder": "^2.0.3",
         "jszip": "^2.6.1",
         "lodash": "^4.17.15",
-        "moment": "^2.24.0",
+        "moment": "^2.29.4",
         "ui-bootstrap4": "^3.0.6",
         "underscore": "^1.9.1"
     },

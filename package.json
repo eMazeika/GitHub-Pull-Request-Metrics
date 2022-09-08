@@ -8,7 +8,7 @@
         "angular-resource": "^1.7.8",
         "angular-ui-grid": "^4.8.1",
         "excel-builder": "^2.0.3",
-        "jszip": "^2.6.1",
+        "jszip": "^2.7.0",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "ui-bootstrap4": "^3.0.6",
